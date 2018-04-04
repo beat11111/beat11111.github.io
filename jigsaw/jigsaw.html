@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>方块</title>
+	<style type="text/css">
+		td {
+			width: 100px;
+			height:100px;
+			background-color: green;
+			margin: 10px;
+			text-align: center;
+			padding:0px;
+			line-height: 100px;
+			font-size: 60px;
+			color: orange;
+
+		}
+
+		#case {
+			
+			width: 408px;
+			height: 410px;
+			border-color: black;
+			border-style: solid;
+
+		}
+
+		#td16 {
+			background-color: transparent;
+		}
+
+		.button {
+			width: 200px;
+			height:100px;
+			background-color: green;
+			margin: 2px;
+			text-align: center;
+			padding:0px;
+			line-height: 100px;
+			font-size: 25px;
+			color: orange;
+		}
+
+		#case2 {
+			position: absolute;
+			left: 425px;
+			top: 8px;
+			border-color: black;
+			border-style: solid;
+
+		}
+	</style>
+</head>
+<body>
+	<div id = "case">
+		<table>
+		<tr>
+			<td id = "0">1</td>
+			<td id = "1">2</td>
+			<td id = "2">3</td>
+			<td id = "3">4</td>
+		</tr>
+		<tr>
+			<td id = "4">5</td>
+			<td id = "5">6</td>
+			<td id = "6">7</td>
+			<td id = "7">8</td>
+		</tr>
+		<tr>
+			<td id = "8">9</td>
+			<td id = "9">10</td>
+			<td id = "10">11</td>
+			<td id = "11">12</td>
+		</tr>
+		<tr>
+			<td id = "12">13</td>
+			<td id = "13">14</td>
+			<td id = "14">15</td>
+			<td id = "15"></td>
+		</tr>
+		</table>
+		<div id = "case2">
+		<div id = "button1" class = "button">游戏开始</div>
+		<div id = "button2" class = "button"></div>
+		<div id = "button3" class = "button">重新来过</div>
+		<div id = "button4" class = "button"></div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var abc = document.getElementsByTagName("td");	//abc指代移动方格
+		var button4 = document.getElementById("button4");
+		var button3 = document.getElementById("button3");
+		var button2 = document.getElementById("button2");
+		var button1 = document.getElementById("button1");
+
+		button3.onclick = pAgain;
+		button1.onclick = gameBegin;
+		
+		var counter = 0;
+
+		function move(e) {
+			var number = Number(e.target.id);
+			if(abc[number].innerHTML != ""){
+				if((number < 15) && ((number + 1) % 4 != 0)){
+					if(abc[number+1].innerHTML == ""){
+						swap(number, number + 1);
+						return;
+					}
+				}
+				if((number > 0) && (number % 4 != 0)){
+					if(abc[number-1].innerHTML == ""){
+						swap(number, number - 1);
+						return;
+					}
+				}
+				if(number < 12){
+					if(abc[number+4].innerHTML == ""){
+						swap(number, number + 4);
+						return;
+					}
+				}
+				if(number > 3){
+					if(abc[number-4].innerHTML == ""){
+						swap(number, number - 4);
+						return;
+					}
+				}				
+				}
+				return;
+			}
+
+
+		function swap(x, y) {
+			abc[y].innerHTML = abc[x].innerHTML;
+			abc[x].innerHTML = "";	
+			counter ++;
+			button4.innerHTML = "已走" + counter + "步";
+			decideWin();
+		}
+
+		function pAgain() {
+			clearInterval(onlyId);
+			x = 0;
+			y = 0;
+			gameBegin();
+			button4.innerHTML = "";
+			counter = 0;
+			randomNubmer2();
+
+
+		}
+
+		function randomNubmer2() {
+			var textNumbers = [1, 2, 3, 4, 5, 6, 7, 8, "", 9, 10, 11, 12, 13, 14, 15];
+			textNumbers.sort(randomNumber1);
+			var textLength = textNumbers.length;
+			for(var i = 0; i < textLength; i++) 
+				abc[i].innerHTML = textNumbers[i];
+		}
+
+		function randomNumber1(x, y) {
+			var a = Math.ceil(Math.random() * 2);
+			if(a % 2 == 0)
+				return x - y;
+			else
+				return y - x;
+		}
+
+		function decideWin() {
+			var a = true;
+			for(var i = 0; i < (abc.length-1); i++) {
+				if(abc[i].innerHTML == (i+1))
+					continue;
+				else
+					a = false;
+			}
+
+			if(a){
+				for(var i = 0; i < abc.length; i++) {
+				abc[i].onclick = null;
+				}
+				clearInterval(onlyId);
+				button2.innerHTML = "你成功啦!";
+				button1.onclick = null;
+			}
+
+		}
+
+		function gameBegin() {
+			for(var i = 0; i < abc.length; i++) {
+				abc[i].onclick = move;
+			}
+			randomNubmer2();
+			button2.innerHTML = "";
+			if(!x) {
+				onlyId = setInterval(timeMissing, 1000);
+			}
+			button1.innerHTML = "暂停";
+			button1.onclick = pause;
+
+		}
+
+			var x = 0,
+				y = 0;
+
+		function timeMissing() {
+
+			if(y < 59){
+				x ++;
+				if(x > 59) {
+					x = 0;
+					y ++;
+				}
+				button2.innerHTML = y + "分" + x + "秒";
+			} else {
+				button2.innerHTML = "游戏结束";
+				for(i = 0; i < abc.length; i++) {
+					abc[i].onclick = null;
+				}
+			}
+		}
+
+		function pause() {
+			clearInterval(onlyId);
+			button1.innerHTML = "继续";
+			for(var i = 0; i < abc.length; i++) {
+				abc[i].onclick = null;
+			}
+			button1.onclick = gameContinue;
+		}
+
+		function gameContinue() {
+			button1.innerHTML = "暂停";
+			onlyId = setInterval(timeMissing, 1000);
+			for(var i = 0; i < abc.length; i++) 
+				abc[i].onclick = move;
+			button1.onclick = pause;
+		}
+
+	</script>
+</body>
+</html>

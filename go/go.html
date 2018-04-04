@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script type="text/javascript" src = "jquery-3.3.1.min.js"></script>
+    <title>围棋</title>
+</head>
+<body>
+    <canvas id="canvas" width="572" height="572"></canvas>
+    <script>
+    var squareColor = true,
+        boardState = [],
+        squareinit,
+        squareWidth,
+        counter = 0,
+        ctx = $("#canvas").get(0).getContext('2d');
+
+    initBoard();
+    initBoardState();
+    $("#canvas").on('click', move);
+
+    // 地图初始化
+    function initBoard() {
+        ctx.strokeStyle = "black";
+        ctx.beginPath();
+        squareinit = 16;
+        squareWidth = 30;
+        var boardLength = squareWidth*18 + squareinit;
+        for(var i = 0; i < 19; i ++){
+            ctx.moveTo(squareinit, squareinit + i*squareWidth);
+            ctx.lineTo(boardLength, squareinit + i*squareWidth);
+            ctx.moveTo(squareinit + i*squareWidth, squareinit);
+            ctx.lineTo(squareinit + i*squareWidth, boardLength);
+        }
+        ctx.stroke();
+    }
+
+    // 根据表格状态表，重新画出地图和棋子
+    function repaintMap() {
+        ctx.clearRect(0, 0, 572, 572);
+        initBoard();       
+        for(var i = 0; i < 19; i ++){
+            for(var j = 0; j < 19; j ++){
+                if(boardState[i][j].flag ===  1){
+                    ctx.beginPath();
+                    ctx.fillStyle = "black";
+                    ctx.arc(i*squareWidth + squareinit, j*squareWidth + squareinit, 15, 0, Math.PI*2, false);
+                    ctx.fill();
+                    ctx.stroke();
+                }else if(boardState[i][j].flag ===  2){
+                    ctx.beginPath();
+                    ctx.fillStyle = "white";  
+                    ctx.arc(i*squareWidth + squareinit, j*squareWidth + squareinit, 15, 0, Math.PI*2, false);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+        
+    function move(e){          
+        var fixedX = computeFixedX(e.offsetX);
+        var fixedY = computeFixedY(e.offsetY);
+        var coX = (fixedX-squareinit) / squareWidth;
+        var coY = (fixedY-squareinit) / squareWidth;
+        
+        if(boardState[coX][coY].flag === 0){
+            colorSwap(coX, coY);
+            ifKill(coX, coY);
+            clearState();
+
+            decideIfBreath(coX,coY);
+            conputeQi();
+
+            if(counter){
+                repaintMap();
+            } else {
+                squareColor = !squareColor;
+                boardState[coX][coY].flag = 0;
+            }
+
+            clearState();     
+        }
+    }
+
+
+    // 根据给定坐标，变换颜色，更新棋盘状态
+    function colorSwap(x, y) {
+        squareColor = !squareColor;
+        if(squareColor){
+            ctx.fillStyle = "black";
+            boardState[x][y].flag = 1;
+        }else {
+            ctx.fillStyle = "white";   
+            boardState[x][y].flag = 2;       
+        }
+    }
+
+    //给定鼠标偏离像素，计算表格固定位置
+    function computeFixedX(x){
+        var fixedX;
+        if((x-squareinit)%squareWidth >= 15) 
+            fixedX = squareinit + (parseInt((x-squareinit) / squareWidth) + 1) * squareWidth;
+        else {
+            fixedX = squareinit + (parseInt((x-squareinit) / squareWidth)) * squareWidth;
+        }
+        return fixedX;
+    }
+    function computeFixedY(y){
+        var fixedY;
+        if((y-squareinit)%squareWidth >= 15) 
+            fixedY = squareinit + (parseInt((y-squareinit) / squareWidth) + 1) * squareWidth;
+        else {
+            fixedY = squareinit + (parseInt((y-squareinit) / squareWidth)) * squareWidth;
+        }
+        return fixedY;
+    }
+
+    //判断给定坐标的四个方向是否有气，如果有，则pass，如果没有，则调用killSquares函数
+    function ifKill(x,y) {
+        clearState();
+        if(y > 0 ){
+            decideIfBreath(x, y-1);
+            conputeQi();
+            if(!counter){
+                boardState[x][y].state = 2;
+                killSquares();
+                repaintMap();
+            }
+            clearState();
+        }
+
+        if(y < 18){
+            decideIfBreath(x, y+1);
+            conputeQi();
+            if(!counter){
+                boardState[x][y].state = 2;
+                killSquares();    
+                repaintMap();          
+            }
+            clearState();
+        } 
+
+        if(x > 0){
+            decideIfBreath(x-1, y);
+            conputeQi();
+            if(!counter){
+                boardState[x][y].state = 2;
+                killSquares();
+                repaintMap();
+            }
+            clearState();
+        } 
+
+        if(x < 18){
+            decideIfBreath(x+1, y);
+            conputeQi();
+            if(!counter){
+                boardState[x][y].state = 2;                
+                killSquares();
+                repaintMap();
+            }
+            clearState();
+        }
+    }
+
+    //判断是否有气，如果有，将state属性设置为3
+    function decideIfBreath(x,y) {    
+        boardState[x][y].state = 1;
+        if(y > 0 && boardState[x][y-1].state === 0){
+            if(boardState[x][y-1].flag === 0){
+                boardState[x][y-1].state = 3;
+            }else if(boardState[x][y-1].flag === boardState[x][y].flag){
+                decideIfBreath(x, y-1);
+            }
+        }
+
+        if(x < 18 && boardState[x+1][y].state === 0){
+            if(boardState[x+1][y].flag === 0){
+                boardState[x+1][y].state = 3;
+            }else if(boardState[x+1][y].flag === boardState[x][y].flag){
+                decideIfBreath(x+1, y);
+            }
+        }
+
+        if(y < 18 && boardState[x][y+1].state === 0){
+            if(boardState[x][y+1].flag === 0){
+                boardState[x][y+1].state = 3;
+            }else if(boardState[x][y+1].flag === boardState[x][y].flag){
+                decideIfBreath(x, y+1);
+            }
+        }
+
+        if(x > 0 && boardState[x-1][y].state === 0){
+            if(boardState[x-1][y].flag === 0){
+                boardState[x-1][y].state = 3;
+            }else if(boardState[x-1][y].flag === boardState[x][y].flag){
+                decideIfBreath(x-1, y)
+            }
+        }
+
+    }
+
+    // 初始化棋盘状态表
+    function initBoardState() {
+        for(var i = 0; i < 19; i ++){
+            boardState[i] = [];
+            for(var j = 0; j < 19; j ++){
+                boardState[i][j] = {};
+                boardState[i][j].flag = 0;
+                boardState[i][j].state = 0;
+            }
+        }
+    }
+
+    // 清空棋盘状态表的state属性，并清零counter
+    function clearState() {
+        for(var i = 0; i < 19; i ++){
+            for(var j = 0; j < 19; j ++){
+                boardState[i][j].state =  0;
+            }
+        }
+        counter = 0;
+    }
+
+    //遍历方块状态表，如果state为1，则将flag赋值为0
+    function killSquares(){
+        for(var i = 0; i < 19; i ++){
+            for(var j = 0; j < 19; j ++){
+                if(boardState[i][j].state === 1){
+                    boardState[i][j].flag = 0;
+                }               
+            }
+        }
+    }
+    
+    function conputeQi() {
+        for(var i = 0; i < 19; i ++){
+            for(var j = 0; j < 19; j ++){
+                if(boardState[i][j].state === 3){
+                    ++ counter
+                }               
+            }
+        }
+    }
+
+    </script>
+</body>
+</html>

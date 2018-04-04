@@ -1,0 +1,53 @@
+
+
+
+i横排,基数是1
+i, i-1, i-2, i-3, i-4
+i+1, i, i-1, i-2, i-3
+i+2, i+1, i, i-1, i-2
+i+3, i+2, i+1, i, i-1
+i+4, i+3, i+2, i+1, i
+
+竖排，基数是j
+j=15
+i, i-j, i-2j, i-3j, i-4j
+i+j, i, i-j, i-2j, i-3j
+
+左下斜排，基数是j-1
+j=15
+i, i-(j-1),i-2(j-1),i-2(j-1),i-2(j-1)
+
+右下斜排，基数是j+1
+j=15
+i, i-(j+1),i-2(j+1), i-3(j+1),i-4(j+1)
+
+        (
+          (imagesSrc[x] == imagesSrc[x+1]) &&
+          (imagesSrc[x+1] == imagesSrc[x+2]) &&
+          (imagesSrc[x+2] == imagesSrc[x+3]) &&
+          (imagesSrc[x+3] == imagesSrc[x+4])
+          ) ||
+        (
+          (imagesSrc[x-1] == imagesSrc[x]) &&
+          (imagesSrc[x] == imagesSrc[x+1]) &&
+          (imagesSrc[x+1] == imagesSrc[x+2]) &&
+          (imagesSrc[x+2] == imagesSrc[x+3]) 
+          ) ||
+        (
+          (imagesSrc[x-2] == imagesSrc[x-1]) &&
+          (imagesSrc[x-1] == imagesSrc[x]) &&
+          (imagesSrc[x] == imagesSrc[x+1]) &&
+          (imagesSrc[x+1] == imagesSrc[x+2]) 
+          ) ||
+        (
+          (imagesSrc[x-3] == imagesSrc[x-2]) &&
+          (imagesSrc[x-2] == imagesSrc[x-1]) &&
+          (imagesSrc[x-1] == imagesSrc[x]) &&
+          (imagesSrc[x] == imagesSrc[x+1]) 
+          ) ||
+        (
+          (imagesSrc[x-4] == imagesSrc[x-3]) &&
+          (imagesSrc[x-3] == imagesSrc[x-2]) &&
+          (imagesSrc[x-2] == imagesSrc[x-1]) &&
+          (imagesSrc[x-1] == imagesSrc[x]) 
+          ) ||

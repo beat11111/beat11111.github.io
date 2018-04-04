@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>俄罗斯方块</title>
+    <script type="text/javascript" src = "jquery-3.3.1.min.js"></script>
+    <style>
+    		td {
+			width: 20px;
+			height:20px;
+			background-color: rgb(118, 194, 118);
+		}
+            .brick {
+                background-color: rgb(194, 96, 173);
+            }
+
+            .wall {
+                background-color: rgb(59, 55, 58);
+            }
+
+            button {
+                border-style: 0px solid black;
+                width: 100px;
+                height:40px;
+                background-color: rgb(118, 194, 118);
+                text-align: center;
+                line-height: 40px;
+                font-size: 18px;
+                color: black;
+		    }
+
+            .button1 {
+                position: absolute;
+                top: 50px;
+                left: 320px;
+            }
+            .button2 {
+                position: absolute;
+                top: 150px;
+                left: 320px;
+            }
+            .button3 {
+                position: absolute;
+                top: 250px;
+                left: 320px;
+            }
+            .button4 {
+                position: absolute;
+                top: 350px;
+                left: 320px;
+				font-size: 15px;
+            }
+            .selected {
+            	color: yellow;
+
+            }
+
+    </style>
+</head>
+<body>
+    <table>
+		<tr id = 'tr1'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr2'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr3'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr4'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr5'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr6'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr7'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr8'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr9'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr10'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr11'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr12'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr13'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr14'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr15'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr16'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr17'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+		<tr id = 'tr18'>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+        </tr>
+        <button class = "button1">Begin</button>
+        <button class = "button2">Pause</button>
+        <button class = "button3">Again</button>
+        <button class = "button4">Points</button>
+
+        <script>
+        var coX = ["00", "01", "02", "03", "04" ,"05", "06", "07", "08", "09", "10" ,"11"];
+		var coY= ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10" ,"11", "12", "13", "14", "15","16","17"];
+		var x =5,
+            y =0,
+            direction,
+			shape,
+			points = 0,
+			timeId1,
+			timeId2
+			stopSeed = true;
+      
+       /*
+            设定各个方块对象，一个模拟三维数组
+            第一个下标选择图形，分别为0 = L左；1 = L右；2 = 长条；3 = T型； 4 = 田； 5 = 阶梯左； 6 = 阶梯右
+            第二个下标选择每个图形的方向，分别为上右下左0123
+            第三个下标选择图形每个方格的坐标，共四个
+       */
+        var squares = [];
+        squares[0] = [];
+        squares[1] = [];
+        squares[2] = [];
+        squares[3] = [];
+        squares[4] = [];
+        squares[5] = [];
+        squares[6] = [];
+
+        function initSquares() {    //待改进，怎么样仅初始化部分，以便提高效率
+            
+            squares[0][0] = [coX[x]+coY[y],coX[x]+coY[y+1],coX[x]+coY[y+2],coX[x+1]+coY[y+2]];
+            squares[0][1] = [coX[x-1]+coY[y],coX[x]+coY[y],coX[x+1]+coY[y],coX[x-1]+coY[y+1]];
+            squares[0][2] = [coX[x-1]+coY[y],coX[x]+coY[y],coX[x]+coY[y+1],coX[x]+coY[y+2]];
+            squares[0][3] = [coX[x]+coY[y],coX[x]+coY[y+1],coX[x-1]+coY[y+1],coX[x-2]+coY[y+1]];
+            
+            squares[1][0] = [coX[x]+coY[y],coX[x]+coY[y+1],coX[x]+coY[y+2],coX[x-1]+coY[y+2]];
+            squares[1][1] = [coX[x-1]+coY[y],coX[x]+coY[y+1],coX[x+1]+coY[y+1],coX[x-1]+coY[y+1]];
+            squares[1][2] = [coX[x+1]+coY[y],coX[x]+coY[y],coX[x]+coY[y+1],coX[x]+coY[y+2]];
+            squares[1][3] = [coX[x]+coY[y],coX[x]+coY[y+1],coX[x-1]+coY[y],coX[x-2]+coY[y]];
+            
+            squares[2][0] = [coX[x]+coY[y],coX[x]+coY[y+1],coX[x]+coY[y+2],coX[x]+coY[y+3]];
+            squares[2][1] = [coX[x-1]+coY[y],coX[x]+coY[y],coX[x+1]+coY[y],coX[x+2]+coY[y]];
+            squares[2][2] = [coX[x]+coY[y],coX[x]+coY[y+1],coX[x]+coY[y+2],coX[x]+coY[y+3]];
+            squares[2][3] = [coX[x-1]+coY[y],coX[x]+coY[y],coX[x+1]+coY[y],coX[x+2]+coY[y]];
+            
+            squares[3][0] = [coX[x]+coY[y],coX[x-1]+coY[y+1],coX[x]+coY[y+1],coX[x+1]+coY[y+1]];
+            squares[3][1] = [coX[x]+coY[y],coX[x]+coY[y+1],coX[x+1]+coY[y+1],coX[x]+coY[y+2]];
+            squares[3][2] = [coX[x-1]+coY[y],coX[x]+coY[y],coX[x+1]+coY[y],coX[x]+coY[y+1]];
+            squares[3][3] = [coX[x]+coY[y],coX[x]+coY[y+1],coX[x]+coY[y+2],coX[x-1]+coY[y+1]]; 
+            
+            squares[4][0] = [coX[x]+coY[y],coX[x+1]+coY[y],coX[x]+coY[y+1],coX[x+1]+coY[y+1]];  
+            squares[4][1] = [coX[x]+coY[y],coX[x+1]+coY[y],coX[x]+coY[y+1],coX[x+1]+coY[y+1]];
+            squares[4][2] = [coX[x]+coY[y],coX[x+1]+coY[y],coX[x]+coY[y+1],coX[x+1]+coY[y+1]];
+            squares[4][3] = [coX[x]+coY[y],coX[x+1]+coY[y],coX[x]+coY[y+1],coX[x+1]+coY[y+1]];
+            
+            squares[5][0] = [coX[x]+coY[y],coX[x]+coY[y+1],coX[x+1]+coY[y+1],coX[x+1]+coY[y+2]];  
+            squares[5][1] = [coX[x]+coY[y],coX[x+1]+coY[y],coX[x]+coY[y+1],coX[x-1]+coY[y+1]];
+            squares[5][2] = [coX[x]+coY[y],coX[x]+coY[y+1],coX[x+1]+coY[y+1],coX[x+1]+coY[y+2]];  
+            squares[5][3] = [coX[x]+coY[y],coX[x+1]+coY[y],coX[x]+coY[y+1],coX[x-1]+coY[y+1]];
+            
+            squares[6][0] = [coX[x]+coY[y],coX[x]+coY[y+1],coX[x-1]+coY[y+1],coX[x-1]+coY[y+2]];  
+            squares[6][1] = [coX[x-1]+coY[y],coX[x]+coY[y],coX[x+1]+coY[y+1],coX[x]+coY[y+1]];
+            squares[6][2] = [coX[x]+coY[y],coX[x]+coY[y+1],coX[x-1]+coY[y+1],coX[x-1]+coY[y+2]];  
+            squares[6][3] = [coX[x-1]+coY[y],coX[x]+coY[y],coX[x+1]+coY[y+1],coX[x]+coY[y+1]];
+        }
+
+        initMap();
+		moveHandle();
+
+        //函数init任务是初始化坐标系
+        function initMap() {   
+            var i = 0;     
+            for ( var y = 0; y < 18; y ++){
+                for( var x = 0; x < 12; x ++ ){
+                    $('td').eq(i).addClass(coX[x] + coY[y]);
+                    i ++;
+                }
+		    }
+        }
+
+		function moveHandle() {
+			$('button').on('click', function() {
+				$('button').removeClass('selected');
+				$(this).addClass('selected');
+				console.log(1);
+			})
+			$(".button1").bind("click", gameBegin);	
+			$(document).bind("keydown", keys);
+			$(".button2").bind("click", keysStop);	
+			$(".button3").bind("click", gameBeginAgain);
+		}	
+		
+		function gameBeginAgain() {
+			points = 0;
+			clearAllWall();
+			clearTimeout(timeId1);
+			clearTimeout(timeId2);
+			$(".button1").text("Playing");
+			$(".button2").text("Pause");
+			$(document).unbind("keydown", keys);
+			$(document).bind("keydown", keys);
+			$(".button2").unbind("click", keysStop);
+			$(".button2").bind("click", keysStop);	
+			moveSquare();
+
+		}
+
+
+		function gameBegin() {
+			moveSquare();
+			$(".button1").unbind("click", gameBegin);	
+			
+		}
+
+
+        //  根据现有坐标画出方块
+        function paintSquare() {
+            initSquares();			
+            var i;
+            $('td').removeClass('brick');
+			
+            for(i = 0; i < 4; i++){
+				$('.'+ squares[shape][direction][i]).addClass('brick');
+            }		
+		}
+		
+		function moveSquare() {
+			beginSquare();
+			if(decideMoveStop(400)){
+				paintSquare();
+				timeId2 = setTimeout(moveDown, 500); 
+			}else{
+				$(document).unbind("keydown", keys);	
+				$(".button2").unbind("click", keysStop);
+				$(".button1").text("End");
+				return;
+			}
+                     
+		}
+
+        function randomNumber(a) {
+                return Math.floor(Math.random() * a);
+        }
+        
+        function recoverXY() {
+            x = 5;
+            y = 0;
+			direction = 0;
+			stopSeed = true;
+        }
+
+
+		
+		function beginSquare() {
+			shape = randomNumber(7);
+			recoverXY();
+			initSquares();
+		}
+
+		function moveDown() {
+			if(decideMoveStop(40)){					
+				y ++;
+				paintSquare();	
+				clearWall();							
+				timeId1 = setTimeout(moveDown, 500);                  
+			} else {
+				buildWall();			
+				setTimeout(moveSquare, 1000);
+			}   
+		}
+
+		function keys(e){
+			if(e.keyCode == 37){
+				if(decideMoveStop(37)) x--;			
+			} else if(e.keyCode == 39){
+				if(decideMoveStop(39)) x++;
+			} else if(e.keyCode == 40){
+				if(decideMoveStop(40)) y++;	
+			} else if(e.keyCode == 38){
+				if(decideMoveStop(38)){
+					if(direction == 3) direction = 0;
+					else direction ++;
+				}
+			}	
+			paintSquare();
+		}
+
+		
+		function keysStop() {
+			if(stopSeed){
+				$(document).unbind("keydown", keys);	
+				clearTimeout(timeId1);
+				$(".button2").text("Continue");	
+				stopSeed = false;
+			} else {
+				$(document).bind("keydown", keys);	
+				timeId1 = setTimeout(moveDown, 500); 
+				$(".button2").text("Pause");	
+				stopSeed = true;
+			}
+		}
+
+
+
+								
+
+        function decideMoveStop(moveDirection) {	
+            var str,
+				strDirectionPlus1,
+				strDirection0,
+				strX,
+				strXMinus1,
+				strXPlus1,
+				strY,
+				strYPlus1;
+
+            for(var i = 0; i < 4; i++){
+                str = squares[shape][direction][i];
+				strX = str.substr(0,2);
+				strY = str.substr(2);
+
+				if(Number(strY) < 9)
+					strYPlus1 = "0" + (Number(strY) + 1 );
+				else 
+					strYPlus1 = "" + (Number(strY) + 1 );	
+
+				if(Number(strX) < 11)
+					strXMinus1 = "0" + (Number(strX) - 1 );
+				else 
+					strXMinus1 = "" + (Number(strX) - 1 );	
+
+				if(Number(strX) < 9)
+					strXPlus1 = "0" + (Number(strX) + 1);
+				else
+					strXPlus1 = "" + (Number(strX) + 1);
+				
+				switch(moveDirection){
+					case 37: {
+						if(strX < 1) return false;				// 如果向左移动到底了，就返回false
+						if($("." + (strXMinus1 + strY)).hasClass("wall")) return false; //如果左边有墙
+						break;
+					}
+					case 39: {
+						if(strX > 10) return false;				// 如果向右移动到底了，就返回false
+						if($("." + (strXPlus1 + strY)).hasClass("wall")) return false; // 如果右边有墙
+						break;
+					}
+					case 40:  {							//40用于判断下降时是否遇到障碍
+						if(strY > 16 ) return false;  	// 如果到底了，就返回false			
+						if($("." + (strX + strYPlus1)).hasClass("wall")) return false;   // 如果下面有墙
+						break;
+					}
+					case 38:{
+						if(direction == 3){
+							strDirection0 = squares[shape][0][i];						
+							if($("." + (strDirection0)).hasClass("wall")) return false; 
+							if(strDirection0 >= 0) {;}else return false;
+						} else{						
+							strDirectionPlus1 = squares[shape][direction + 1][i];
+							if($("." + (strDirectionPlus1)).hasClass("wall")) return false; 
+							if(strDirectionPlus1 >= 0) {}else return false;
+						}						
+						break;
+					}
+					case 400:  {							//400用于判断是否死亡		
+						if($("." + (strX + strY)).hasClass("wall")) return false;   
+						break;
+					}	  
+				}
+			}
+			return true; 
+		}
+
+        function buildWall() {
+            var i;
+            initSquares();
+			for(i = 0; i < 4; i++){
+                $('.'+ squares[shape][direction][i]).removeClass('brick');
+            }
+            for(i = 0; i < 4; i++){
+                $('.'+ squares[shape][direction][i]).addClass('wall');
+            }
+		}
+		
+        function clearAllWall() {   
+            var i = 0;     
+            for ( var y = 0; y < 18; y ++){
+                for( var x = 0; x < 12; x ++ ){
+					$('td').eq(i).removeClass("wall");
+					$('td').eq(i).removeClass("brick");
+                    i ++;
+                }
+			}
+		}
+		
+		function clearWall() {
+			var index;
+			var pointsIndex = 0;
+			for(let j = 0; j < 18; j ++){
+				index = 0;
+				for(let i = 0; i < 12; i ++){
+				if($("." + (coX[i] + coY[j])).hasClass("wall"))  index ++;
+					if(index == 12) {
+						clearWall2(j);
+						pointsIndex += 10;
+						points += pointsIndex;
+					} 
+				}
+			}
+			$(".button4").text(points + " points");
+		}
+		
+		function clearWall2(y) {
+			for(let i = 0; i < 12; i ++){
+				$("." + (coX[i] + coY[y])).removeClass("wall");
+			}
+			clearWall3(y);
+		}
+		
+		function clearWall3(y) {		
+			for(; y > 0; y --){
+				for(let i = 0; i < 12; i ++){
+					if($("." + (coX[i] + coY[y-1])).hasClass("wall")){
+						$("." + (coX[i] + coY[y-1])).removeClass("wall");
+						$("." + (coX[i] + coY[y])).addClass("wall");
+					}
+				}
+			}
+		}		
+
+        
+             
+        </script>
+        
+</body>
+</html>

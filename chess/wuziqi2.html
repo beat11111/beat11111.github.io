@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script type="text/javascript" src = "jquery-3.3.1.min.js"></script>
+    <title>五子棋</title>
+</head>
+<body>
+    <canvas id="canvas" width="572" height="572"></canvas>
+    <script>
+    var fixedX,
+        fixedY,
+        squareColor = true,
+        winFlag = 0,
+        boardState = [],
+        squareinit,
+        squareWidth,
+        boardLength;
+    
+    if( $("#canvas").length ) 
+        var ctx = $("#canvas").get(0).getContext('2d');
+    else 
+        console.log('Error: Canvas not found with selector #canvas');
+
+
+    initBoard();
+    initBoardState();
+    $("#canvas").on('click', move);
+
+    function initBoard() {
+        ctx.strokeStyle = "black";
+        ctx.beginPath();
+        squareinit = 16;
+        squareWidth = 30;
+        boardLength = squareWidth*18 + squareinit;
+        for(var i = 0; i < 19; i ++){
+            ctx.moveTo(squareinit, squareinit + i*squareWidth);
+            ctx.lineTo(boardLength, squareinit + i*squareWidth);
+            ctx.moveTo(squareinit + i*squareWidth, squareinit);
+            ctx.lineTo(squareinit + i*squareWidth, boardLength);
+        }
+        ctx.stroke();
+    }
+
+
+    function initBoardState() {
+        for(var i = 0; i < 19; i ++){
+            boardState[i] = [];
+            for(var j = 0; j < 19; j ++){
+                boardState[i][j] = 0;
+            }
+        }
+    }
+    
+        
+    function move(e){  
+        if((e.offsetX-squareinit)%squareWidth >= 15) 
+            fixedX = squareinit + (parseInt((e.offsetX-squareinit) / squareWidth) + 1) * squareWidth;
+        else {
+            fixedX = squareinit + (parseInt((e.offsetX-squareinit) / squareWidth)) * squareWidth;
+        }
+
+        if((e.offsetY-squareinit)%squareWidth >= 15) 
+            fixedY = squareinit + (parseInt((e.offsetY-squareinit) / squareWidth) + 1) * squareWidth;
+        else {
+            fixedY = squareinit + (parseInt((e.offsetY-squareinit) / squareWidth)) * squareWidth;
+        }
+        var coX = (fixedX-squareinit) / squareWidth;
+        var coY = (fixedY-squareinit) / squareWidth;
+
+        if(!boardState[coX][coY]){
+            squareColor = !squareColor;
+            ctx.beginPath();
+            if(squareColor){
+                ctx.fillStyle = "black";
+                boardState[coX][coY] = 1;
+            }else {
+                ctx.fillStyle = "white";   
+                boardState[coX][coY] = 2;       
+            }
+
+            ctx.arc(fixedX, fixedY, 15, 0, Math.PI*2, false);
+            ctx.fill();
+            ctx.stroke();
+
+            decideWhoWin(coX,coY);
+        }
+    }
+
+
+    function decideWhoWin(x,y) {
+        if(boardState[x][y] == boardState[x+1][y]){
+            if(boardState[x][y] == boardState[x+2][y]){
+                if(boardState[x][y] == boardState[x+3][y]){
+                    if(boardState[x][y] == boardState[x+4][y]){
+                        winFlag = boardState[x][y];
+                    } else{
+                        if(boardState[x-1][y] == boardState[x][y]){
+                            winFlag = boardState[x][y];
+                        }
+                    }
+                } else {
+                    if(boardState[x-1][y] == boardState[x][y]){
+                        if(boardState[x-2][y] == boardState[x][y]){
+                            winFlag = boardState[x][y];
+                        }
+                    }
+                }
+            } else {
+                if(boardState[x-1][y] == boardState[x][y]){
+                    if(boardState[x-2][y] == boardState[x][y]){
+                        if(boardState[x-3][y] == boardState[x][y]){
+                            winFlag = boardState[x][y];
+                        }
+                    }
+                }
+            }
+        } else {
+            if(boardState[x-1][y] == boardState[x][y]){
+                if(boardState[x-2][y] == boardState[x][y]){
+                    if(boardState[x-3][y] == boardState[x][y]){
+                        if(boardState[x-4][y] == boardState[x][y]){
+                            winFlag = boardState[x][y];
+                        }                          
+                    }
+                }
+            }
+        }
+
+       if(boardState[x][y] == boardState[x][y+1]){
+            if(boardState[x][y] == boardState[x][y+2]){
+                if(boardState[x][y] == boardState[x][y+3]){
+                    if(boardState[x][y] == boardState[x][y+4]){
+                        winFlag = boardState[x][y];
+                    } else{
+                        if(boardState[x][y-1] == boardState[x][y]){
+                            winFlag = boardState[x][y];
+                        }
+                    }
+                } else {
+                    if(boardState[x][y-1] == boardState[x][y]){
+                        if(boardState[x][y-2] == boardState[x][y]){
+                            winFlag = boardState[x][y];
+                        }
+                    }
+                }
+            } else {
+                if(boardState[x][y-1] == boardState[x][y]){
+                    if(boardState[x][y-2] == boardState[x][y]){
+                        if(boardState[x][y-3] == boardState[x][y]){
+                            winFlag = boardState[x][y];
+                        }
+                    }
+                }
+            }
+        } else {
+            if(boardState[x][y-1] == boardState[x][y]){
+                if(boardState[x][y-2] == boardState[x][y]){
+                    if(boardState[x][y-3] == boardState[x][y]){
+                        if(boardState[x][y-4] == boardState[x][y]){
+                            winFlag = boardState[x][y];
+                        }                          
+                    }
+                }
+            }
+        }
+
+       if(boardState[x][y] == boardState[x+1][y+1]){
+            if(boardState[x][y] == boardState[x+2][y+2]){
+                if(boardState[x][y] == boardState[x+3][y+3]){
+                    if(boardState[x][y] == boardState[x+4][y+4]){
+                        winFlag = boardState[x][y];
+                    } else{
+                        if(boardState[x-1][y-1] == boardState[x][y]){
+                            winFlag = boardState[x][y];
+                        }
+                    }
+                } else {
+                    if(boardState[x-1][y-1] == boardState[x][y]){
+                        if(boardState[x-2][y-2] == boardState[x][y]){
+                            winFlag = boardState[x][y];
+                        }
+                    }
+                }
+            } else {
+                if(boardState[x-1][y-1] == boardState[x][y]){
+                    if(boardState[x-2][y-2] == boardState[x][y]){
+                        if(boardState[x-3][y-3] == boardState[x][y]){
+                            winFlag = boardState[x][y];
+                        }
+                    }
+                }
+            }
+        } else {
+            if(boardState[x-1][y-1] == boardState[x][y]){
+                if(boardState[x-2][y-2] == boardState[x][y]){
+                    if(boardState[x-3][y-3] == boardState[x][y]){
+                        if(boardState[x-4][y-4] == boardState[x][y]){
+                            winFlag = boardState[x][y];
+                        }                          
+                    }
+                }
+            }
+        }
+
+       if(boardState[x][y] == boardState[x-1][y+1]){
+            if(boardState[x][y] == boardState[x-2][y+2]){
+                if(boardState[x][y] == boardState[x-3][y+3]){
+                    if(boardState[x][y] == boardState[x-4][y+4]){
+                        winFlag = boardState[x][y];
+                    } else{
+                        if(boardState[x+1][y-1] == boardState[x][y]){
+                            winFlag = boardState[x][y];
+                        }
+                    }
+                } else {
+                    if(boardState[x+1][y-1] == boardState[x][y]){
+                        if(boardState[x+2][y-2] == boardState[x][y]){
+                            winFlag = boardState[x][y];
+                        }
+                    }
+                }
+            } else {
+                if(boardState[x+1][y-1] == boardState[x][y]){
+                    if(boardState[x+2][y-2] == boardState[x][y]){
+                        if(boardState[x+3][y-3] == boardState[x][y]){
+                            winFlag = boardState[x][y];
+                        }
+                    }
+                }
+            }
+        } else {
+            if(boardState[x+1][y-1] == boardState[x][y]){
+                if(boardState[x+2][y-2] == boardState[x][y]){
+                    if(boardState[x+3][y-3] == boardState[x][y]){
+                        if(boardState[x+4][y-4] == boardState[x][y]){
+                            winFlag = boardState[x][y];
+                        }                          
+                    }
+                }
+            }
+        }
+
+        /*
+            var tempX;
+            var tempY;
+            
+            for(tempX = x, tempY = y; tempX > (x-5); tempX --){
+                if(
+                    (boardState[tempX][tempY] == boardState[tempX+1][tempY]) &&
+                    (boardState[tempX+1][tempY] == boardState[tempX+2][tempY]) &&
+                    (boardState[tempX+2][tempY] == boardState[tempX+3][tempY]) &&
+                    (boardState[tempX+3][tempY] == boardState[tempX+4][tempY])
+                ){
+                    winFlag = boardState[x][y];
+                }
+            }
+
+            for(tempX = x, tempY = y; tempY > (y-5); tempY --){
+                if(
+                    (boardState[tempX][tempY] == boardState[tempX][tempY+1]) &&
+                    (boardState[tempX][tempY+1] == boardState[tempX][tempY+2]) &&
+                    (boardState[tempX][tempY+2] == boardState[tempX][tempY+3]) &&
+                    (boardState[tempX][tempY+3] == boardState[tempX][tempY+4])
+                ){
+                    winFlag = boardState[x][y];
+                }
+            }
+
+            for(tempX = x, tempY = y; tempY > (y-5); tempY --){
+                tempX = tempY;
+                if(
+                    (boardState[tempX][tempY] == boardState[tempX+1][tempY+1]) &&
+                    (boardState[tempX+1][tempY+1] == boardState[tempX+2][tempY+2]) &&
+                    (boardState[tempX+2][tempY+2] == boardState[tempX+3][tempY+3]) &&
+                    (boardState[tempX+3][tempY+3] == boardState[tempX+4][tempY+4])
+                ){
+                    winFlag = boardState[x][y];
+                }
+            }
+
+            for(tempX = x, tempY = y; tempY > (y-5); tempY --){
+                tempX ++;
+                if(
+                    (boardState[tempX][y] == boardState[tempX-1][y+1]) &&
+                    (boardState[tempX-1][y+1] == boardState[tempX-2][y+2]) &&
+                    (boardState[tempX-2][y+2] == boardState[tempX-3][y+3]) &&
+                    (boardState[tempX-3][y+3] == boardState[tempX-4][y+4])
+                ){
+                    winFlag = boardState[x][y];
+                }
+            }          
+            */     
+
+            if(winFlag) {
+                gameOver(winFlag);
+            }
+        }
+
+        function gameOver(winFlag) {
+            var temp = 0;
+            if(winFlag == 1){
+                setTimeout(function() { 
+                    temp = confirm("黑棋胜利! 再来一局？");
+                    if(temp) {
+                        window.location.reload(); 
+                    } else $("#canvas").off('click', move);                 
+                },10);
+            }else if(winFlag == 2){
+                setTimeout(function() { 
+                    temp = confirm("白棋胜利! 再来一局？");
+                    if(temp) {
+                        window.location.reload(); 
+                    } else $("#canvas").off('click', move);                 
+                },10);
+            }
+        }
+  
+    
+    </script>
+</body>
+</html>

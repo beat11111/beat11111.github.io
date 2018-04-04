@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script type="text/javascript" src = "jquery-3.3.1.min.js"></script>
+    <title>围棋</title>
+</head>
+<body>
+    <canvas id="canvas" width="572" height="572"></canvas>
+    <script>
+    var ctx = $("#canvas").get(0).getContext('2d');
+    var temp;
+    var ball = {
+        x : 200,
+        y : 50,
+        r : 10,
+        xSpeed : -1,
+        ySpeed : -1
+    };
+    ball.draw = function() {
+        ctx.beginPath();
+        ctx.fillStyle = "red";
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI*2, false);
+        ctx.fill();
+    };
+    ball.move = function() {
+        this.x = this.x + this.xSpeed;
+        this.y = this.y + this.ySpeed;
+    };
+    ball.checkCanvas = function(panelStart, panelEnd) {
+        if(this.x < 10 || this.x > 490)
+            this.xSpeed = -this.xSpeed;
+        if(this.y < 10)
+            this.ySpeed = -this.ySpeed;    
+        if(this.y > 381){
+            if(this.x + 10 > panelStart && this.x - 10 < panelEnd){
+                this.ySpeed = -this.ySpeed; 
+            }else{
+                if(confirm("游戏结束，再来一局？")){
+                    this.x = 200;
+                    this.y = 50;                 
+                }else {
+                    clearInterval(temp); 
+                }
+            }
+        }
+    };
+
+    var panel = {
+        x : 200,
+        y : 390,
+        xSize : 80,
+        ySize : 5
+    };
+    panel.draw = function () {
+        ctx.fillStyle = "black";
+        ctx.fillRect(this.x, this.y, this.xSize, this.ySize);
+    };
+    
+    temp = setInterval(function() {
+        ctx.clearRect(0, 0, 500, 400);
+        ball.draw();
+        panel.draw();
+        ball.move();
+        ball.checkCanvas(panel.x, panel.x + panel.xSize);
+        ctx.strokeRect(0, 0, 500, 400);
+    }, 8);
+
+    $('body').keydown(function(e) {
+        if(e.keyCode === 37){
+            panel.x = panel.x - 20;
+            if(panel.x < 0)
+                panel.x = 0;
+        }
+        if(e.keyCode === 39){
+            panel.x = panel.x + 20;
+            if(panel.x > 500 - panel.xSize)
+                panel.x = 500 - panel.xSize;
+        }
+    });
+    </script>
+</body>
+</html>
